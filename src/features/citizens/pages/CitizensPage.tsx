@@ -1,19 +1,46 @@
+import { Card, CardContent, Grid, Stack, Typography } from '@mui/material'
+
 export function CitizensPage() {
     return (
-        <section className="page-section">
-            <header className="page-header">
-                <p className="page-kicker">Реестр</p>
-                <h2>Граждане</h2>
-                <p className="page-description">
-                    Здесь будут таблица граждан, фильтры, пагинация и карточка с
-                    подробной информацией.
-                </p>
-            </header>
+        <Stack spacing={4}>
+            <Stack spacing={1}>
+                <Typography variant="overline" color="primary.main">
+                    Реестр
+                </Typography>
+                <Typography variant="h3">Граждане</Typography>
+                <Typography maxWidth={760} color="text.secondary">
+                    Здесь будут таблица граждан, фильтры, пагинация и карточка с подробной
+                    информацией.
+                </Typography>
+            </Stack>
 
-            <article className="placeholder-card">
-                <h3>Таблица граждан</h3>
-                <p>Здесь появятся поиск, фильтры, таблица и выбор строки.</p>
-            </article>
-        </section>
+            <Grid container spacing={3}>
+                <Grid size={{ xs: 12, lg: 7 }}>
+                    <Card>
+                        <CardContent sx={{ p: 3.5 }}>
+                            <Stack spacing={1.5}>
+                                <Typography variant="h6">Список граждан</Typography>
+                                <Typography color="text.secondary">
+                                    Здесь появятся поиск, фильтры, таблица и выбор строки.
+                                </Typography>
+                            </Stack>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid size={{ xs: 12, lg: 5 }}>
+                    <Card>
+                        <CardContent sx={{ p: 3.5 }}>
+                            <Stack spacing={1.5}>
+                                <Typography variant="h6">Карточка гражданина</Typography>
+                                <Typography color="text.secondary">
+                                    Справа будет detail-panel с секциями, связанными данными и
+                                    режимом редактирования.
+                                </Typography>
+                            </Stack>
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
+        </Stack>
     )
 }
