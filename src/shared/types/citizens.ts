@@ -61,3 +61,11 @@ export type Citizen = CitizenListItem & {
     family: FamilyMember[]
     education: CitizenEducation[]
 }
+
+export type CitizensListResponse = {
+    items: CitizenListItem[]
+}
+
+export type CitizenDetailsResponse = {
+    item: Citizen | null
+}
