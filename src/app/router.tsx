@@ -1,6 +1,6 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom'
 
-import { AppLayout } from '@features/common/components/AppLayout'
+import { AppLayout } from '@app/layout/AppLayout'
 import { CitizensPage } from '@features/citizens/pages/CitizensPage'
 import { DashboardPage } from '@features/dashboard/pages/DashboardPage'
 
