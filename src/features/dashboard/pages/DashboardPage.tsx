@@ -1,51 +1,95 @@
-import { Card, CardContent, Grid, Stack, Typography } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { Alert, CircularProgress, Grid, Stack, Typography } from '@mui/material'
 
-const dashboardCards = [
-    {
-        title: 'Всего граждан',
-        description:
-            'Здесь появится ключевая метрика по общему количеству записей в реестре.',
-    },
-    {
-        title: 'Средний возраст',
-        description:
-            'Карточка будет показывать агрегированную статистику по возрастной структуре.',
-    },
-    {
-        title: 'Графики и аналитика',
-        description: 'На этом месте появятся визуализации для распределений и динамики.',
-    },
-]
+import { getDashboardData } from '@shared/api'
+import type { DashboardData } from '@shared/types'
+
+import { DashboardBreakdownCard } from '../components/DashboardBreakdownCard'
+import { DashboardMetricCard } from '../components/DashboardMetricCard'
+import { DashboardPageHeader } from '../components/DashboardPageHeader'
 
 export function DashboardPage() {
+    const [dashboard, setDashboard] = useState<DashboardData | null>(null)
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+
+    useEffect(() => {
+        let isActive = true
+
+        const loadDashboard = async () => {
+            setIsLoading(true)
+            setError(null)
+
+            try {
+                const response = await getDashboardData()
+
+                if (!isActive) return
+
+                setDashboard(response)
+            } catch (loadError) {
+                if (!isActive) return
+
+                setError(loadError instanceof Error ? loadError.message : 'Не удалось загрузить дашборд.')
+                setDashboard(null)
+            } finally {
+                if (isActive) setIsLoading(false)
+            }
+        }
+
+        loadDashboard()
+
+        return () => { isActive = false }
+    }, [])
+
     return (
         <Stack spacing={4}>
-            <Stack spacing={1}>
-                <Typography variant="overline" color="primary.main">
-                    Обзор
-                </Typography>
-                <Typography variant="h3">Дашборд</Typography>
-                <Typography maxWidth={760} color="text.secondary">
-                    Здесь будут сводные метрики и графики с аналитикой по гражданам.
-                </Typography>
-            </Stack>
+            <DashboardPageHeader />
 
-            <Grid container spacing={3}>
-                {dashboardCards.map((card) => (
-                    <Grid key={card.title} size={{ xs: 12, md: 4 }}>
-                        <Card>
-                            <CardContent sx={{ p: 3.5 }}>
-                                <Stack spacing={1.5}>
-                                    <Typography variant="h6">{card.title}</Typography>
-                                    <Typography color="text.secondary">
-                                        {card.description}
-                                    </Typography>
-                                </Stack>
-                            </CardContent>
-                        </Card>
+            {error ? <Alert severity="error">{error}</Alert> : null}
+
+            {isLoading ? (
+                <Stack alignItems="center" spacing={2} sx={{ py: 10 }}>
+                    <CircularProgress size={32} />
+                    <Typography color="text.secondary">Загрузка метрик дашборда...</Typography>
+                </Stack>
+            ) : null}
+
+            {!isLoading && dashboard ? (
+                <Stack spacing={3}>
+                    <Grid container spacing={3}>
+                        <Grid size={{ xs: 12, md: 4 }}>
+                            <DashboardMetricCard
+                                label="Всего граждан"
+                                value={String(dashboard.totalCitizens)}
+                                caption="Текущий размер реестра по mock-данным"
+                            />
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 4 }}>
+                            <DashboardMetricCard
+                                label="Средний возраст"
+                                value={String(dashboard.averageAge)}
+                                caption="Средний возраст по загруженным профилям"
+                            />
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 4 }}>
+                            <DashboardMetricCard
+                                label="Требуют обновления"
+                                value={String(dashboard.needsUpdateCitizens)}
+                                caption="Профили, которым нужна актуализация данных"
+                            />
+                        </Grid>
                     </Grid>
-                ))}
-            </Grid>
+
+                    <Grid container spacing={3}>
+                        <Grid size={{ xs: 12, lg: 6 }}>
+                            <DashboardBreakdownCard title="По регионам" items={dashboard.byRegion} />
+                        </Grid>
+                        <Grid size={{ xs: 12, lg: 6 }}>
+                            <DashboardBreakdownCard title="По статусам" items={dashboard.byStatus} />
+                        </Grid>
+                    </Grid>
+                </Stack>
+            ) : null}
         </Stack>
     )
 }
