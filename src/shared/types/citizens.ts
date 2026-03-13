@@ -62,8 +62,30 @@ export type Citizen = CitizenListItem & {
     education: CitizenEducation[]
 }
 
+export type CitizenFilters = {
+    search: string
+    statuses: CitizenStatus[]
+    regions: string[]
+    genders: CitizenGender[]
+}
+
+export type CitizensSortField = 'fullName' | 'age' | 'lastUpdatedAt'
+
+export type SortDirection = 'asc' | 'desc'
+
+export type CitizensQuery = {
+    filters: CitizenFilters
+    sortBy: CitizensSortField
+    sortDirection: SortDirection
+    page: number
+    pageSize: number
+}
+
 export type CitizensListResponse = {
     items: CitizenListItem[]
+    total: number
+    page: number
+    pageSize: number
 }
 
 export type CitizenDetailsResponse = {

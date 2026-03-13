@@ -6,7 +6,7 @@ import type { DashboardData } from '@shared/types'
 
 import { DashboardBreakdownCard } from '../components/DashboardBreakdownCard'
 import { DashboardMetricCard } from '../components/DashboardMetricCard'
-import { DashboardPageHeader } from '../components/DashboardPageHeader'
+import { DashboardPageHeader } from './DashboardPageHeader'
 
 export function DashboardPage() {
     const [dashboard, setDashboard] = useState<DashboardData | null>(null)

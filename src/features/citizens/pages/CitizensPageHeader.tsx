@@ -7,7 +7,7 @@ export const CitizensPageHeader = () => (
         </Typography>
         <Typography variant="h3">Граждане</Typography>
         <Typography maxWidth={760} color="text.secondary">
-            Здесь будут фильтры, сортировка и пагинация, но они будут добавлены позже
+            Реестр с поиском, фильтрами, сортировкой и пагинацией
         </Typography>
     </Stack>
 )
