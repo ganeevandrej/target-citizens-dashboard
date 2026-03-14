@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles'
 
 import type { Citizen } from '@shared/types'
 
-import { CitizenDetailsCard } from './CitizenDetailsCard'
+import { CitizenDetailsPanel } from './CitizenDetailsPanel'
 
 type CitizensDetailsDrawerProps = {
     open: boolean
@@ -25,7 +25,7 @@ const DrawerScrollArea = styled(Box)({
 })
 
 const drawerPaperSx = {
-    width: { xs: '100%', sm: 480, lg: 560 },
+    width: { xs: '100%', sm: 780, lg: 920 },
     p: 3,
 }
 
@@ -49,7 +49,7 @@ export const CitizensDetailsDrawer = ({
             </Stack>
 
             <DrawerScrollArea>
-                <CitizenDetailsCard
+                <CitizenDetailsPanel
                     citizen={citizen}
                     selectedCitizenId={selectedCitizenId}
                     isLoading={isLoading}

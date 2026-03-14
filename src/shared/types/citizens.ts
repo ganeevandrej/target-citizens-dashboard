@@ -40,6 +40,36 @@ export type CitizenEducation = {
     graduatedAt: string | null
 }
 
+export type CitizenComment = {
+    id: string
+    author: string
+    createdAt: string
+    text: string
+}
+
+export type CitizenHistoryEntry = {
+    id: string
+    createdAt: string
+    actor: string
+    action: string
+    description: string
+}
+
+export type CitizenProfileStatus = 'new' | 'verified' | 'on_review'
+
+export type CitizenVerificationStatus = 'verified' | 'needs_documents' | 'pending'
+
+export type CitizenRiskLevel = 'low' | 'medium' | 'high'
+
+export type CitizenServiceMeta = {
+    profileStatus: CitizenProfileStatus
+    verificationStatus: CitizenVerificationStatus
+    riskLevel: CitizenRiskLevel
+    curator: string
+    sourceSystem: string
+    lastReviewAt: string | null
+}
+
 export type CitizenListItem = {
     id: string
     fullName: string
@@ -60,6 +90,9 @@ export type Citizen = CitizenListItem & {
     addresses: CitizenAddress[]
     family: FamilyMember[]
     education: CitizenEducation[]
+    serviceMeta: CitizenServiceMeta
+    comments: CitizenComment[]
+    history: CitizenHistoryEntry[]
 }
 
 export type CitizenFilters = {

@@ -3,10 +3,8 @@ import { styled } from '@mui/material/styles'
 
 import type { Citizen } from '@shared/types'
 
-import { CitizensSectionState } from '../CitizensSectionState'
-import { CitizenAddressSection } from './CitizenAddressSection'
-import { CitizenMainInfoSection } from './CitizenMainInfoSection'
-import { CitizenSummarySection } from './CitizenSummarySection'
+import { CitizensSectionState } from '../../CitizensSectionState'
+import { CitizenProfileEditor } from '../profile/CitizenProfileEditor'
 
 const DetailsCard = styled(Card)({
     border: 'none',
@@ -14,25 +12,21 @@ const DetailsCard = styled(Card)({
     boxShadow: 'none',
 })
 
-const DetailsCardContent = styled(CardContent)({
-    padding: 0,
-})
-
-type CitizenDetailsCardProps = {
+type CitizenDetailsPanelProps = {
     citizen: Citizen | null
     selectedCitizenId: string | null
     isLoading: boolean
     error: string | null
 }
 
-export const CitizenDetailsCard = ({
+export const CitizenDetailsPanel = ({
     citizen,
     selectedCitizenId,
     isLoading,
     error,
-}: CitizenDetailsCardProps) => (
+}: CitizenDetailsPanelProps) => (
     <DetailsCard variant="outlined">
-        <DetailsCardContent>
+        <CardContent sx={{ p: 0 }}>
             <Stack spacing={2.5}>
                 <Stack spacing={0.5}>
                     <Typography variant="h6">Карточка гражданина</Typography>
@@ -41,15 +35,10 @@ export const CitizenDetailsCard = ({
                     </Typography>
                 </Stack>
 
-                {error ? (
-                    <CitizensSectionState kind="message" severity="error" message={error} />
-                ) : null}
+                {error ? <CitizensSectionState kind="message" severity="error" message={error} /> : null}
 
                 {isLoading ? (
-                    <CitizensSectionState
-                        kind="loading"
-                        message="Загрузка данных гражданина..."
-                    />
+                    <CitizensSectionState kind="loading" message="Загрузка данных гражданина..." />
                 ) : null}
 
                 {!isLoading && !selectedCitizenId ? (
@@ -68,14 +57,8 @@ export const CitizenDetailsCard = ({
                     />
                 ) : null}
 
-                {!isLoading && citizen ? (
-                    <Stack spacing={2.5}>
-                        <CitizenSummarySection citizen={citizen} />
-                        <CitizenMainInfoSection citizen={citizen} />
-                        <CitizenAddressSection citizen={citizen} />
-                    </Stack>
-                ) : null}
+                {!isLoading && citizen ? <CitizenProfileEditor key={citizen.id} citizen={citizen} /> : null}
             </Stack>
-        </DetailsCardContent>
+        </CardContent>
     </DetailsCard>
 )
