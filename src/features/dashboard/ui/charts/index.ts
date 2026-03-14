@@ -1,0 +1,1 @@
+export { DashboardRegistrationsChart } from './DashboardRegistrationsChart'

@@ -5,9 +5,6 @@ export const DashboardPageHeader = () => (
         <Typography variant="overline" color="primary.main">
             Обзор
         </Typography>
-        <Typography variant="h3">Дашборд</Typography>
-        <Typography maxWidth={760} color="text.secondary">
-            Минимальный аналитический экран
-        </Typography>
+        <Typography variant="h4">Дашборд</Typography>
     </Stack>
 )

@@ -33,11 +33,25 @@ export const appTheme = createTheme({
         },
     },
     components: {
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    borderRadius: 12,
+                },
+            },
+        },
         MuiCard: {
             styleOverrides: {
                 root: {
                     borderRadius: 24,
                     boxShadow: '0 20px 40px rgba(16, 24, 40, 0.08)',
+                },
+            },
+        },
+        MuiOutlinedInput: {
+            styleOverrides: {
+                root: {
+                    borderRadius: 12,
                 },
             },
         },

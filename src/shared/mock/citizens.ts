@@ -1,5 +1,13 @@
 import type { Citizen, CitizenListItem } from '@shared/types'
 
+const buildServiceMeta = (
+    serviceMeta: Citizen['serviceMeta'],
+): Citizen['serviceMeta'] => serviceMeta
+
+const buildComments = (comments: Citizen['comments']): Citizen['comments'] => comments
+
+const buildHistory = (history: Citizen['history']): Citizen['history'] => history
+
 export const mockCitizens: Citizen[] = [
     {
         id: 'citizen-001',
@@ -72,6 +80,31 @@ export const mockCitizens: Citizen[] = [
                 graduatedAt: '2011-06-30',
             },
         ],
+        serviceMeta: buildServiceMeta({
+            profileStatus: 'verified',
+            verificationStatus: 'verified',
+            riskLevel: 'low',
+            curator: 'Мария Соколова',
+            sourceSystem: 'Федеральный реестр',
+            lastReviewAt: '2026-03-06T09:30:00.000Z',
+        }),
+        comments: buildComments([
+            {
+                id: 'comment-001',
+                author: 'Мария Соколова',
+                createdAt: '2026-03-06T10:00:00.000Z',
+                text: 'Профиль актуализирован после сверки паспортных данных.',
+            },
+        ]),
+        history: buildHistory([
+            {
+                id: 'history-001',
+                createdAt: '2026-03-06T09:30:00.000Z',
+                actor: 'Мария Соколова',
+                action: 'Проверка профиля',
+                description: 'Подтверждены основные документы и контактные данные.',
+            },
+        ]),
     },
     {
         id: 'citizen-002',
@@ -115,6 +148,31 @@ export const mockCitizens: Citizen[] = [
                 graduatedAt: '2018-07-05',
             },
         ],
+        serviceMeta: buildServiceMeta({
+            profileStatus: 'on_review',
+            verificationStatus: 'needs_documents',
+            riskLevel: 'medium',
+            curator: 'Алексей Миронов',
+            sourceSystem: 'МФЦ Северо-Запад',
+            lastReviewAt: '2026-03-01T11:20:00.000Z',
+        }),
+        comments: buildComments([
+            {
+                id: 'comment-002',
+                author: 'Алексей Миронов',
+                createdAt: '2026-03-01T11:40:00.000Z',
+                text: 'Ожидаются подтверждающие документы по месту проживания.',
+            },
+        ]),
+        history: buildHistory([
+            {
+                id: 'history-002',
+                createdAt: '2026-03-01T11:20:00.000Z',
+                actor: 'Алексей Миронов',
+                action: 'Запрос документов',
+                description: 'Создан запрос на подтверждение адреса регистрации.',
+            },
+        ]),
     },
     {
         id: 'citizen-003',
@@ -174,6 +232,31 @@ export const mockCitizens: Citizen[] = [
                 graduatedAt: '2000-06-28',
             },
         ],
+        serviceMeta: buildServiceMeta({
+            profileStatus: 'verified',
+            verificationStatus: 'verified',
+            riskLevel: 'low',
+            curator: 'Елена Власова',
+            sourceSystem: 'Региональный сегмент СФО',
+            lastReviewAt: '2026-03-02T08:10:00.000Z',
+        }),
+        comments: buildComments([
+            {
+                id: 'comment-003',
+                author: 'Елена Власова',
+                createdAt: '2026-03-02T08:12:00.000Z',
+                text: 'Профиль синхронизирован с региональным сегментом без расхождений.',
+            },
+        ]),
+        history: buildHistory([
+            {
+                id: 'history-003',
+                createdAt: '2026-03-02T08:10:00.000Z',
+                actor: 'Елена Власова',
+                action: 'Синхронизация',
+                description: 'Выполнена ночная синхронизация карточки.',
+            },
+        ]),
     },
     {
         id: 'citizen-004',
@@ -224,6 +307,31 @@ export const mockCitizens: Citizen[] = [
                 graduatedAt: '2006-06-15',
             },
         ],
+        serviceMeta: buildServiceMeta({
+            profileStatus: 'new',
+            verificationStatus: 'pending',
+            riskLevel: 'high',
+            curator: 'Наталья Орлова',
+            sourceSystem: 'Импорт архива',
+            lastReviewAt: null,
+        }),
+        comments: buildComments([
+            {
+                id: 'comment-004',
+                author: 'Наталья Орлова',
+                createdAt: '2026-02-20T15:10:00.000Z',
+                text: 'Архивная запись требует ручной ревизии перед восстановлением.',
+            },
+        ]),
+        history: buildHistory([
+            {
+                id: 'history-004',
+                createdAt: '2026-02-20T15:00:00.000Z',
+                actor: 'Наталья Орлова',
+                action: 'Импорт из архива',
+                description: 'Карточка перенесена в новый контур из архивного реестра.',
+            },
+        ]),
     },
     {
         id: 'citizen-005',
@@ -267,6 +375,31 @@ export const mockCitizens: Citizen[] = [
                 graduatedAt: null,
             },
         ],
+        serviceMeta: buildServiceMeta({
+            profileStatus: 'verified',
+            verificationStatus: 'pending',
+            riskLevel: 'medium',
+            curator: 'Светлана Ермакова',
+            sourceSystem: 'Единый личный кабинет',
+            lastReviewAt: '2026-03-10T13:00:00.000Z',
+        }),
+        comments: buildComments([
+            {
+                id: 'comment-005',
+                author: 'Светлана Ермакова',
+                createdAt: '2026-03-10T13:05:00.000Z',
+                text: 'Пользователь обновил контакты, ожидается повторная верификация.',
+            },
+        ]),
+        history: buildHistory([
+            {
+                id: 'history-005',
+                createdAt: '2026-03-10T13:00:00.000Z',
+                actor: 'Светлана Ермакова',
+                action: 'Обновление контактов',
+                description: 'Изменены email и телефон через личный кабинет.',
+            },
+        ]),
     },
     {
         id: 'citizen-006',
@@ -330,6 +463,31 @@ export const mockCitizens: Citizen[] = [
                 graduatedAt: '1989-06-20',
             },
         ],
+        serviceMeta: buildServiceMeta({
+            profileStatus: 'on_review',
+            verificationStatus: 'needs_documents',
+            riskLevel: 'high',
+            curator: 'Игорь Демин',
+            sourceSystem: 'Call-центр',
+            lastReviewAt: '2026-01-18T09:40:00.000Z',
+        }),
+        comments: buildComments([
+            {
+                id: 'comment-006',
+                author: 'Игорь Демин',
+                createdAt: '2026-01-18T09:42:00.000Z',
+                text: 'Требуется дослать СНИЛС в читаемом виде и подтвердить семейный статус.',
+            },
+        ]),
+        history: buildHistory([
+            {
+                id: 'history-006',
+                createdAt: '2026-01-18T09:40:00.000Z',
+                actor: 'Игорь Демин',
+                action: 'Ручная проверка',
+                description: 'Обнаружены неполные данные в связанных документах.',
+            },
+        ]),
     },
 ]
 
