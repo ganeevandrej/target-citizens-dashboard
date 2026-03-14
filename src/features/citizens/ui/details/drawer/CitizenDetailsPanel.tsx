@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles'
 
 import type { Citizen } from '@shared/types'
 
-import { CitizensSectionState } from '../../CitizensSectionState'
+import { CitizensSectionState } from '../../states'
 import { CitizenProfileEditor } from '../profile/CitizenProfileEditor'
 
 const DetailsCard = styled(Card)({

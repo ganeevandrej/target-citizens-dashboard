@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles'
 
 import type { CitizenListItem } from '@shared/types'
 
-import { CitizensSectionState } from '../CitizensSectionState'
+import { CitizensSectionState } from '../states'
 import { CitizensListHeader } from './CitizensListHeader'
 import { CitizensTable } from './CitizensTable'
 

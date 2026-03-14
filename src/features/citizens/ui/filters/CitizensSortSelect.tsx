@@ -8,7 +8,7 @@ import {
     getSortOptionValue,
     parseSortOptionValue,
     type SortOptionValue,
-} from '../model/citizensSort'
+} from '../../model/citizensSort'
 
 type CitizensSortSelectProps = {
     query: CitizensQuery

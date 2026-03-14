@@ -9,7 +9,7 @@ import {
     citizenGenderOptions,
     citizenRegionOptions,
     citizenStatusOptions,
-} from '../model/citizenFilterOptions'
+} from '../../model/citizenFilterOptions'
 
 type CitizensFiltersBarProps = {
     query: CitizensQuery

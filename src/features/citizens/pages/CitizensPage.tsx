@@ -1,8 +1,6 @@
 import { Stack } from '@mui/material'
 
-import { CitizensFiltersBar } from '../components/CitizensFiltersBar'
-import { CitizensDetailsDrawer } from '../components/details'
-import { CitizensListCard } from '../components/list/CitizensListCard'
+import { CitizensDetailsDrawer, CitizensFiltersBar, CitizensListCard } from '../ui'
 import { useCitizenDetails } from '../hooks/useCitizenDetails'
 import { useCitizensList } from '../hooks/useCitizensList'
 import { CitizensPageHeader } from './CitizensPageHeader'
