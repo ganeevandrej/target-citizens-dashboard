@@ -11,7 +11,6 @@ import type { Citizen } from '@shared/types'
 
 import { FormTextField } from '../fields/FormTextField'
 import { getRiskChipColor, getStatusChipColor } from './model/citizenProfileOptions'
-import type { UpdateServiceMetaField } from './types/editor'
 
 type CitizenProfileHeaderProps = {
     citizen: Citizen
@@ -21,7 +20,6 @@ type CitizenProfileHeaderProps = {
     saveError: string | null
     onReset: () => void
     onSave: () => Promise<void>
-    updateServiceMeta: UpdateServiceMetaField
 }
 
 export const CitizenProfileHeader = ({
@@ -32,7 +30,6 @@ export const CitizenProfileHeader = ({
     saveError,
     onReset,
     onSave,
-    updateServiceMeta,
 }: CitizenProfileHeaderProps) => (
     <Stack spacing={2}>
         <Stack
@@ -82,23 +79,15 @@ export const CitizenProfileHeader = ({
                 <FormTextField label="Обновлено" value={formatDate(citizen.lastUpdatedAt)} disabled />
             </Grid>
             <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-                <FormTextField
-                    label="Куратор"
-                    value={citizen.serviceMeta.curator}
-                    onChange={(event) => updateServiceMeta('curator', event.target.value)}
-                />
+                <FormTextField label="Куратор" name="serviceMeta.curator" />
             </Grid>
             <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-                <FormTextField
-                    label="Источник"
-                    value={citizen.serviceMeta.sourceSystem}
-                    onChange={(event) => updateServiceMeta('sourceSystem', event.target.value)}
-                />
+                <FormTextField label="Источник" name="serviceMeta.sourceSystem" />
             </Grid>
         </Grid>
 
         {saveMessage ? <Alert severity="success">{saveMessage}</Alert> : null}
         {saveError ? <Alert severity="error">{saveError}</Alert> : null}
-        {hasUnsavedChanges ? <Alert severity="info">Есть несохранённые изменения.</Alert> : null}
+        {hasUnsavedChanges ? <Alert severity="info">Есть несохраненные изменения.</Alert> : null}
     </Stack>
 )

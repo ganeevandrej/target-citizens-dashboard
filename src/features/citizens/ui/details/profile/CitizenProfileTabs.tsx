@@ -1,13 +1,6 @@
 import { useState } from 'react'
 import { Stack, Tab, Tabs } from '@mui/material'
 
-import type { Citizen } from '@shared/types'
-
-import type {
-    CitizenProfileTab,
-    UpdateCitizenField,
-    UpdateServiceMetaField,
-} from './types/editor'
 import { CitizenAddressesSection } from './sections/CitizenAddressesSection'
 import { CitizenCommentsSection } from './sections/CitizenCommentsSection'
 import { CitizenContactsSection } from './sections/CitizenContactsSection'
@@ -18,17 +11,9 @@ import { CitizenHistorySection } from './sections/CitizenHistorySection'
 import { CitizenPersonalSection } from './sections/CitizenPersonalSection'
 import { CitizenServiceSection } from './sections/CitizenServiceSection'
 
-type CitizenProfileTabsProps = {
-    citizen: Citizen
-    updateCitizen: UpdateCitizenField
-    updateServiceMeta: UpdateServiceMetaField
-}
+type CitizenProfileTab = 'profile' | 'related' | 'service'
 
-export const CitizenProfileTabs = ({
-    citizen,
-    updateCitizen,
-    updateServiceMeta,
-}: CitizenProfileTabsProps) => {
+export const CitizenProfileTabs = () => {
     const [activeTab, setActiveTab] = useState<CitizenProfileTab>('profile')
 
     return (
@@ -46,30 +31,25 @@ export const CitizenProfileTabs = ({
 
             {activeTab === 'profile' ? (
                 <Stack spacing={2}>
-                    <CitizenPersonalSection citizen={citizen} updateCitizen={updateCitizen} />
-                    <CitizenContactsSection citizen={citizen} updateCitizen={updateCitizen} />
-                    <CitizenAddressesSection addresses={citizen.addresses} updateCitizen={updateCitizen} />
+                    <CitizenPersonalSection />
+                    <CitizenContactsSection />
+                    <CitizenAddressesSection />
                 </Stack>
             ) : null}
 
             {activeTab === 'related' ? (
                 <Stack spacing={2}>
-                    <CitizenDocumentsSection documents={citizen.documents} updateCitizen={updateCitizen} />
-                    <CitizenFamilySection family={citizen.family} updateCitizen={updateCitizen} />
-                    <CitizenEducationSection education={citizen.education} updateCitizen={updateCitizen} />
+                    <CitizenDocumentsSection />
+                    <CitizenFamilySection />
+                    <CitizenEducationSection />
                 </Stack>
             ) : null}
 
             {activeTab === 'service' ? (
                 <Stack spacing={2}>
-                    <CitizenServiceSection
-                        status={citizen.status}
-                        serviceMeta={citizen.serviceMeta}
-                        updateCitizen={updateCitizen}
-                        updateServiceMeta={updateServiceMeta}
-                    />
-                    <CitizenCommentsSection comments={citizen.comments} updateCitizen={updateCitizen} />
-                    <CitizenHistorySection history={citizen.history} updateCitizen={updateCitizen} />
+                    <CitizenServiceSection />
+                    <CitizenCommentsSection />
+                    <CitizenHistorySection />
                 </Stack>
             ) : null}
         </Stack>

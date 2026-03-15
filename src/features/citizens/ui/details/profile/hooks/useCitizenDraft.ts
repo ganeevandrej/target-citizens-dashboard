@@ -1,27 +1,63 @@
-import { useEffect, useMemo, useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useState } from 'react'
+import type { Resolver } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 import { updateCitizen } from '@shared/api'
 import type { Citizen } from '@shared/types'
 
+import { citizenFormSchema } from '../model/citizenFormSchema'
+
+const SAVE_ERROR_MESSAGE = 'Не удалось сохранить карточку гражданина.'
+const FORM_ERROR_MESSAGE = 'Проверьте заполнение формы.'
+
+const getFirstErrorMessage = (value: unknown): string | null => {
+    if (!value || typeof value !== 'object') {
+        return null
+    }
+
+    if ('message' in value && typeof value.message === 'string') {
+        return value.message
+    }
+
+    for (const nestedValue of Object.values(value)) {
+        const nestedMessage = getFirstErrorMessage(nestedValue)
+
+        if (nestedMessage) {
+            return nestedMessage
+        }
+    }
+
+    return null
+}
+
 export const useCitizenDraft = (citizen: Citizen) => {
-    const [draftCitizen, setDraftCitizen] = useState(citizen)
     const [saveMessage, setSaveMessage] = useState<string | null>(null)
     const [saveError, setSaveError] = useState<string | null>(null)
     const [isSaving, setIsSaving] = useState(false)
+    const form = useForm<Citizen>({
+        defaultValues: citizen,
+        resolver: zodResolver(citizenFormSchema) as Resolver<Citizen>,
+        mode: 'onChange',
+    })
+    const {
+        watch,
+        reset,
+        setValue,
+        getValues,
+        trigger,
+        formState: { isDirty, errors },
+    } = form
+    const draftCitizen = watch()
 
     useEffect(() => {
-        setDraftCitizen(citizen)
-    }, [citizen])
-
-    const hasUnsavedChanges = useMemo(() => {
-        return JSON.stringify(draftCitizen) !== JSON.stringify(citizen)
-    }, [citizen, draftCitizen])
+        reset(citizen)
+        setSaveMessage(null)
+        setSaveError(null)
+    }, [citizen, reset])
 
     const updateCitizenField = <K extends keyof Citizen>(field: K, value: Citizen[K]) => {
-        setDraftCitizen((currentCitizen) => ({
-            ...currentCitizen,
-            [field]: value,
-        }))
+        setValue(field as never, value as never, { shouldDirty: true, shouldValidate: true })
         setSaveMessage(null)
         setSaveError(null)
     }
@@ -30,13 +66,7 @@ export const useCitizenDraft = (citizen: Citizen) => {
         field: K,
         value: Citizen['serviceMeta'][K],
     ) => {
-        setDraftCitizen((currentCitizen) => ({
-            ...currentCitizen,
-            serviceMeta: {
-                ...currentCitizen.serviceMeta,
-                [field]: value,
-            },
-        }))
+        setValue(`serviceMeta.${field}` as never, value as never, { shouldDirty: true, shouldValidate: true })
         setSaveMessage(null)
         setSaveError(null)
     }
@@ -47,32 +77,37 @@ export const useCitizenDraft = (citizen: Citizen) => {
         setSaveError(null)
 
         try {
-            const response = await updateCitizen(draftCitizen)
+            const isValid = await trigger()
 
-            if (!response.item) {
-                throw new Error('Не удалось сохранить карточку гражданина.')
+            if (!isValid) {
+                throw new Error(getFirstErrorMessage(errors) ?? FORM_ERROR_MESSAGE)
             }
 
-            setDraftCitizen(response.item)
+            const response = await updateCitizen(getValues())
+
+            if (!response.item) {
+                throw new Error(SAVE_ERROR_MESSAGE)
+            }
+
+            reset(response.item)
             setSaveMessage(`Изменения для "${response.item.fullName}" сохранены в fake API.`)
         } catch (error) {
-            setSaveError(
-                error instanceof Error ? error.message : 'Не удалось сохранить карточку гражданина.',
-            )
+            setSaveError(error instanceof Error ? error.message : SAVE_ERROR_MESSAGE)
         } finally {
             setIsSaving(false)
         }
     }
 
     const handleReset = () => {
-        setDraftCitizen(citizen)
+        reset(citizen)
         setSaveMessage(null)
         setSaveError(null)
     }
 
     return {
+        form,
         draftCitizen,
-        hasUnsavedChanges,
+        hasUnsavedChanges: isDirty,
         isSaving,
         saveMessage,
         saveError,
