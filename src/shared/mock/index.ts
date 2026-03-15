@@ -1,2 +1,1 @@
-export { mockDashboardData } from './dashboard'
-export { mockCitizens, mockCitizenListItems } from './citizens'
+export { buildCitizen, generateCitizens } from './generateCitizens'

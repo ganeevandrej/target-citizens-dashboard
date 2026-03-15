@@ -10,10 +10,11 @@ type DashboardRegistrationsChartProps = {
 }
 
 const chartHeight = 248
-const chartWidth = 520
+const chartWidth = 960
 const gridSteps = [0.25, 0.5, 0.75, 1]
 const chartTopPadding = 28
 const chartBottomPadding = 22
+const chartSidePadding = 28
 
 const formatMonthLabel = (month: string) => {
     const [year, monthIndex] = month.split('-').map(Number)
@@ -33,10 +34,13 @@ export const DashboardRegistrationsChart = ({
     const theme = useTheme()
     const maxValue = Math.max(...safeItems.map((item) => item.value), 1)
     const plotHeight = chartHeight - chartTopPadding - chartBottomPadding
+    const plotWidth = chartWidth - chartSidePadding * 2
 
     const points = safeItems.map((item, index) => {
         const x =
-            safeItems.length === 1 ? chartWidth / 2 : (index / (safeItems.length - 1)) * chartWidth
+            safeItems.length === 1
+                ? chartWidth / 2
+                : chartSidePadding + (index / (safeItems.length - 1)) * plotWidth
         const y = chartHeight - chartBottomPadding - (item.value / maxValue) * plotHeight
 
         return { ...item, x, y }
@@ -44,9 +48,9 @@ export const DashboardRegistrationsChart = ({
 
     const polylinePoints = points.map((point) => `${point.x},${point.y}`).join(' ')
     const areaPoints = [
-        `0,${chartHeight}`,
+        `${chartSidePadding},${chartHeight}`,
         ...points.map((point) => `${point.x},${point.y}`),
-        `${chartWidth},${chartHeight}`,
+        `${chartWidth - chartSidePadding},${chartHeight}`,
     ].join(' ')
 
     return (
@@ -72,8 +76,8 @@ export const DashboardRegistrationsChart = ({
                             return (
                                 <line
                                     key={step}
-                                    x1="0"
-                                    x2={chartWidth}
+                                    x1={chartSidePadding}
+                                    x2={chartWidth - chartSidePadding}
                                     y1={y}
                                     y2={y}
                                     stroke={alpha(theme.palette.text.primary, 0.1)}
@@ -116,9 +120,17 @@ export const DashboardRegistrationsChart = ({
                         ))}
                     </svg>
 
-                    <Stack direction="row" justifyContent="space-between" spacing={1.5} useFlexGap flexWrap="wrap">
+                    <Stack
+                        direction="row"
+                        spacing={1.5}
+                        sx={{
+                            display: 'grid',
+                            gridTemplateColumns: `repeat(${safeItems.length}, minmax(0, 1fr))`,
+                            alignItems: 'start',
+                        }}
+                    >
                         {safeItems.map((item) => (
-                            <Stack key={item.month} spacing={0.25}>
+                            <Stack key={item.month} spacing={0.25} sx={{ textAlign: 'center' }}>
                                 <Typography variant="overline" color="text.secondary">
                                     {formatMonthLabel(item.month)}
                                 </Typography>

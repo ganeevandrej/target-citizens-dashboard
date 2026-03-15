@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 
-import { getDashboardData } from '@shared/api'
+import { getDashboardData, subscribeToFakeApiStore } from '@shared/api'
 import type { DashboardData } from '@shared/types'
 
 export const useDashboardData = () => {
     const [dashboard, setDashboard] = useState<DashboardData | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const [storeRevision, setStoreRevision] = useState(0)
 
     useEffect(() => {
         let isActive = true
@@ -36,6 +37,12 @@ export const useDashboardData = () => {
         return () => {
             isActive = false
         }
+    }, [storeRevision])
+
+    useEffect(() => {
+        return subscribeToFakeApiStore(() => {
+            setStoreRevision((currentValue) => currentValue + 1)
+        })
     }, [])
 
     return {

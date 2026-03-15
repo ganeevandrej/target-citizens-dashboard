@@ -1,4 +1,3 @@
-import { mockCitizenListItems } from '@shared/mock'
 import type { CitizenListItem, CitizensQuery } from '@shared/types'
 
 const normalizeSearchValue = (value: string) => value.trim().toLocaleLowerCase('ru-RU')
@@ -80,8 +79,3 @@ export const applyCitizenPagination = (
     return items.slice(startIndex, startIndex + safePageSize)
 }
 
-export const getCitizenRegionOptions = () => {
-    return [...new Set(mockCitizenListItems.map((citizen) => citizen.region))].sort((left, right) =>
-        left.localeCompare(right, 'ru-RU'),
-    )
-}

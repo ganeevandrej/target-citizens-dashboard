@@ -1,99 +1,87 @@
 import { Card, CardContent, Divider, Stack, TablePagination } from '@mui/material'
 import { styled } from '@mui/material/styles'
 
-import type { CitizenListItem } from '@shared/types'
-
+import { useCitizensQueryContext, useCitizensSelectionContext } from '../../context'
 import { CitizensSectionState } from '../states'
 import { CitizensListHeader } from './CitizensListHeader'
 import { CitizensTable } from './CitizensTable'
-
-type CitizensListCardProps = {
-    citizens: CitizenListItem[]
-    total: number
-    page: number
-    pageSize: number
-    selectedCitizenId: string | null
-    isLoading: boolean
-    error: string | null
-    onSelectCitizen: (id: string) => void
-    onPageChange: (page: number) => void
-    onPageSizeChange: (pageSize: number) => void
-}
 
 const ListCardContent = styled(CardContent)({
     padding: 0,
 })
 
-export const CitizensListCard = ({
-    citizens,
-    total,
-    page,
-    pageSize,
-    selectedCitizenId,
-    isLoading,
-    error,
-    onSelectCitizen,
-    onPageChange,
-    onPageSizeChange,
-}: CitizensListCardProps) => (
-    <Card>
-        <ListCardContent>
-            <Stack spacing={0}>
-                <CitizensListHeader
-                    isLoading={isLoading}
-                    total={total}
-                    currentCount={citizens.length}
-                />
+export const CitizensListCard = () => {
+    const {
+        citizens,
+        total,
+        query,
+        isListLoading,
+        listError,
+        handlePageChange,
+        handlePageSizeChange,
+    } = useCitizensQueryContext()
+    const { selectedCitizenId, handleSelectCitizen } = useCitizensSelectionContext()
 
-                <Divider />
-
-                {error ? (
-                    <CitizensSectionState
-                        kind="message"
-                        severity="error"
-                        message={error}
-                        padding="list"
+    return (
+        <Card>
+            <ListCardContent>
+                <Stack spacing={0}>
+                    <CitizensListHeader
+                        isLoading={isListLoading}
+                        total={total}
+                        currentCount={citizens.length}
                     />
-                ) : null}
 
-                {isLoading ? (
-                    <CitizensSectionState
-                        kind="loading"
-                        message="Загрузка списка граждан..."
-                        padding="list"
-                    />
-                ) : null}
+                    <Divider />
 
-                {!isLoading && !error && total === 0 ? (
-                    <CitizensSectionState
-                        kind="message"
-                        severity="info"
-                        message="По текущему запросу записи не найдены."
-                        padding="list"
-                    />
-                ) : null}
-
-                {!isLoading && !error && total > 0 ? (
-                    <>
-                        <CitizensTable
-                            citizens={citizens}
-                            selectedCitizenId={selectedCitizenId}
-                            onSelectCitizen={onSelectCitizen}
+                    {listError ? (
+                        <CitizensSectionState
+                            kind="message"
+                            severity="error"
+                            message={listError}
+                            padding="list"
                         />
+                    ) : null}
 
-                        <TablePagination
-                            component="div"
-                            count={total}
-                            page={page - 1}
-                            onPageChange={(_, nextPage) => onPageChange(nextPage + 1)}
-                            rowsPerPage={pageSize}
-                            onRowsPerPageChange={(event) => onPageSizeChange(Number(event.target.value))}
-                            rowsPerPageOptions={[5, 10, 20]}
-                            labelRowsPerPage="Записей на странице"
+                    {isListLoading ? (
+                        <CitizensSectionState
+                            kind="loading"
+                            message="Загрузка списка граждан..."
+                            padding="list"
                         />
-                    </>
-                ) : null}
-            </Stack>
-        </ListCardContent>
-    </Card>
-)
+                    ) : null}
+
+                    {!isListLoading && !listError && total === 0 ? (
+                        <CitizensSectionState
+                            kind="message"
+                            severity="info"
+                            message="По текущему запросу записи не найдены."
+                            padding="list"
+                        />
+                    ) : null}
+
+                    {!isListLoading && !listError && total > 0 ? (
+                        <>
+                            <CitizensTable
+                                citizens={citizens}
+                                selectedCitizenId={selectedCitizenId}
+                                onSelectCitizen={handleSelectCitizen}
+                            />
+
+                            <TablePagination
+                                component="div"
+                                count={total}
+                                page={query.page - 1}
+                                onPageChange={(_, nextPage) => handlePageChange(nextPage + 1)}
+                                rowsPerPage={query.pageSize}
+                                onRowsPerPageChange={(event) => handlePageSizeChange(Number(event.target.value))}
+                                rowsPerPageOptions={[5, 10, 20, 50, 100, 500, 1000]}
+                                labelRowsPerPage="Записей на странице"
+                            />
+                        </>
+                    ) : null}
+                </Stack>
+            </ListCardContent>
+        </Card>
+    )
+}

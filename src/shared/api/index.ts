@@ -1,1 +1,8 @@
-export { getCitizenDetails, getCitizens, getDashboardData } from './fakeApi'
+export {
+    getCitizenDetails,
+    getCitizens,
+    getCitizenRegionOptions,
+    getDashboardData,
+    subscribeToFakeApiStore,
+    updateCitizen,
+} from './fakeApi'

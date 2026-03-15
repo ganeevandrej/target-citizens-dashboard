@@ -7,15 +7,12 @@ import {
     DashboardLoadingState,
     DashboardMetricsSection,
 } from '../ui'
-import { DashboardPageHeader } from './DashboardPageHeader'
 
 export function DashboardPage() {
     const { dashboard, isLoading, error } = useDashboardData()
 
     return (
-        <Stack spacing={4}>
-            <DashboardPageHeader />
-
+        <Stack spacing={3}>
             {error ? <Alert severity="error">{error}</Alert> : null}
 
             {isLoading ? <DashboardLoadingState /> : null}

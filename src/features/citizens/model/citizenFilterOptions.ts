@@ -5,8 +5,6 @@ import type {
     CitizensQuery,
 } from '@shared/types'
 
-import { getCitizenRegionOptions } from './citizensQuery'
-
 export const defaultCitizenFilters: CitizenFilters = {
     search: '',
     statuses: [],
@@ -33,4 +31,3 @@ export const citizenGenderOptions: Array<{ value: CitizenGender; label: string }
     { value: 'female', label: 'Женщина' },
 ]
 
-export const citizenRegionOptions = getCitizenRegionOptions()

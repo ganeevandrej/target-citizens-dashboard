@@ -14,7 +14,9 @@ export const CitizenProfileEditor = ({ citizen }: CitizenProfileEditorProps) => 
     const {
         draftCitizen,
         hasUnsavedChanges,
+        isSaving,
         saveMessage,
+        saveError,
         updateCitizen,
         updateServiceMeta,
         handleSave,
@@ -26,7 +28,9 @@ export const CitizenProfileEditor = ({ citizen }: CitizenProfileEditorProps) => 
             <CitizenProfileHeader
                 citizen={draftCitizen}
                 hasUnsavedChanges={hasUnsavedChanges}
+                isSaving={isSaving}
                 saveMessage={saveMessage}
+                saveError={saveError}
                 onReset={handleReset}
                 onSave={handleSave}
                 updateServiceMeta={updateServiceMeta}

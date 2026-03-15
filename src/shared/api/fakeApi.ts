@@ -1,30 +1,36 @@
 import type {
+    Citizen,
     CitizenDetailsResponse,
     CitizensQuery,
     CitizensListResponse,
     DashboardData,
 } from '@shared/types'
 
-import { mockCitizens, mockCitizenListItems, mockDashboardData } from '@shared/mock'
+import { applyCitizenFilters, applyCitizenPagination, applyCitizenSort } from './query'
+
 import {
-    applyCitizenFilters,
-    applyCitizenPagination,
-    applyCitizenSort,
-} from '@features/citizens/model/citizensQuery'
+    getAvailableCitizenRegions,
+    getRuntimeCitizenById,
+    getRuntimeCitizenListItems,
+    getRuntimeDashboardData,
+    subscribeToFakeApiStore,
+    updateRuntimeCitizen,
+} from './store'
 
 const DELAY_MS = 600
 
+// Пауза перед ответом API
 const delay = (durationMs: number) => {
     return new Promise<void>((resolve) => {
         window.setTimeout(resolve, durationMs)
     })
 }
 
-// получение списка граждан /citizens
+// Возвращает список граждан по текущим параметрам
 export const getCitizens = async (query: CitizensQuery): Promise<CitizensListResponse> => {
     await delay(DELAY_MS)
 
-    const filteredItems = applyCitizenFilters(mockCitizenListItems, query)
+    const filteredItems = applyCitizenFilters(getRuntimeCitizenListItems(), query)
     const sortedItems = applyCitizenSort(filteredItems, query)
     const paginatedItems = applyCitizenPagination(sortedItems, query)
 
@@ -36,18 +42,34 @@ export const getCitizens = async (query: CitizensQuery): Promise<CitizensListRes
     }
 }
 
-// получение данных для карточки гражданина /citizens:id
+// Возвращает карточку гражданина по id
 export const getCitizenDetails = async (id: string): Promise<CitizenDetailsResponse> => {
     await delay(DELAY_MS)
 
+    return getRuntimeCitizenById(id)
+}
+
+// Сохраняет изменения в карточке гражданина
+export const updateCitizen = async (citizen: Citizen): Promise<CitizenDetailsResponse> => {
+    await delay(DELAY_MS)
+
     return {
-        item: mockCitizens.find((citizen) => citizen.id === id) ?? null,
+        item: updateRuntimeCitizen(citizen),
     }
 }
 
-// получение данных для /dashboard
+// Возвращает данные для аналитики
 export const getDashboardData = async (): Promise<DashboardData> => {
     await delay(DELAY_MS)
 
-    return mockDashboardData
+    return getRuntimeDashboardData()
 }
+
+// Возвращает список регионов для фильтра
+export const getCitizenRegionOptions = async (): Promise<string[]> => {
+    await delay(DELAY_MS)
+
+    return getAvailableCitizenRegions()
+}
+
+export { subscribeToFakeApiStore }

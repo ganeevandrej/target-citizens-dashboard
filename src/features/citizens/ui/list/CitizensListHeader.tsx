@@ -8,7 +8,7 @@ type CitizensListHeaderProps = {
 }
 
 const ListHeaderRoot = styled(Stack)(({ theme }) => ({
-    padding: theme.spacing(2.5, 3),
+    padding: theme.spacing(2, 3),
 }))
 
 export const CitizensListHeader = ({
@@ -16,9 +16,11 @@ export const CitizensListHeader = ({
     total,
     currentCount,
 }: CitizensListHeaderProps) => (
-    <ListHeaderRoot direction={{ xs: 'column', sm: 'row' }} spacing={1.5} justifyContent="space-between">
-        <Stack spacing={0.5}>
-            <Typography variant="h6">Реестр граждан</Typography>
+    <ListHeaderRoot direction={{ xs: 'column', sm: 'row' }} spacing={1.25} justifyContent="space-between">
+        <Stack spacing={0.25}>
+            <Typography variant="subtitle1" fontWeight={600}>
+                Список записей
+            </Typography>
             <Typography color="text.secondary">
                 {isLoading
                     ? 'Загрузка данных реестра...'
@@ -29,6 +31,7 @@ export const CitizensListHeader = ({
             label={isLoading ? 'Загрузка' : `${total} найдено`}
             color="primary"
             variant="outlined"
+            size="small"
         />
     </ListHeaderRoot>
 )

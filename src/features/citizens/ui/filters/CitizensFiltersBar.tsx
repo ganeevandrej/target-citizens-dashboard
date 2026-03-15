@@ -1,22 +1,10 @@
 import { Button, Card, CardContent, Stack, TextField } from '@mui/material'
 import { styled } from '@mui/material/styles'
 
-import type { CitizenFilters, CitizensQuery } from '@shared/types'
-
+import { useCitizensQueryContext } from '../../context'
+import { citizenGenderOptions, citizenStatusOptions } from '../../model/citizenFilterOptions'
 import { MultiFilterSelect } from './MultiFilterSelect'
 import { CitizensSortSelect } from './CitizensSortSelect'
-import {
-    citizenGenderOptions,
-    citizenRegionOptions,
-    citizenStatusOptions,
-} from '../../model/citizenFilterOptions'
-
-type CitizensFiltersBarProps = {
-    query: CitizensQuery
-    onFiltersChange: (filters: CitizenFilters) => void
-    onSortChange: (sortBy: CitizensQuery['sortBy'], sortDirection: CitizensQuery['sortDirection']) => void
-    onReset: () => void
-}
 
 const FiltersCardContent = styled(CardContent)({
     padding: 24,
@@ -41,36 +29,39 @@ const ResetButton = styled(Button)(({ theme }) => ({
     },
 }))
 
-export const CitizensFiltersBar = ({
-    query,
-    onFiltersChange,
-    onSortChange,
-    onReset,
-}: CitizensFiltersBarProps) => (
-    <Card>
-        <FiltersCardContent>
-            <Stack spacing={2}>
+export const CitizensFiltersBar = () => {
+    const {
+        query,
+        regionOptions,
+        handleFiltersChange,
+        handleSortChange,
+        handleResetFilters,
+    } = useCitizensQueryContext()
+
+    return (
+        <Card>
+            <FiltersCardContent>
                 <FiltersRow direction="row" spacing={2} useFlexGap>
                     <SearchField
                         placeholder="Поиск: ФИО, ID, город"
                         value={query.filters.search}
                         size="small"
                         onChange={(event) =>
-                            onFiltersChange({
+                            handleFiltersChange({
                                 ...query.filters,
                                 search: event.target.value,
                             })
                         }
                     />
 
-                    <CitizensSortSelect query={query} onSortChange={onSortChange} />
+                    <CitizensSortSelect query={query} onSortChange={handleSortChange} />
 
                     <MultiFilterSelect
                         placeholder="Статус"
                         value={query.filters.statuses}
                         options={citizenStatusOptions}
                         onChange={(statuses) =>
-                            onFiltersChange({
+                            handleFiltersChange({
                                 ...query.filters,
                                 statuses,
                             })
@@ -80,9 +71,9 @@ export const CitizensFiltersBar = ({
                     <MultiFilterSelect
                         placeholder="Регион"
                         value={query.filters.regions}
-                        options={citizenRegionOptions.map((region) => ({ value: region, label: region }))}
+                        options={regionOptions.map((region) => ({ value: region, label: region }))}
                         onChange={(regions) =>
-                            onFiltersChange({
+                            handleFiltersChange({
                                 ...query.filters,
                                 regions,
                             })
@@ -94,18 +85,18 @@ export const CitizensFiltersBar = ({
                         value={query.filters.genders}
                         options={citizenGenderOptions}
                         onChange={(genders) =>
-                            onFiltersChange({
+                            handleFiltersChange({
                                 ...query.filters,
                                 genders,
                             })
                         }
                     />
 
-                    <ResetButton variant="text" size="small" onClick={onReset}>
+                    <ResetButton variant="text" size="small" onClick={handleResetFilters}>
                         Сбросить
                     </ResetButton>
                 </FiltersRow>
-            </Stack>
-        </FiltersCardContent>
-    </Card>
-)
+            </FiltersCardContent>
+        </Card>
+    )
+}

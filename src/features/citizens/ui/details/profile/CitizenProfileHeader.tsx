@@ -10,22 +10,26 @@ import {
 import type { Citizen } from '@shared/types'
 
 import { FormTextField } from '../fields/FormTextField'
-import type { UpdateServiceMetaField } from './types/editor'
 import { getRiskChipColor, getStatusChipColor } from './model/citizenProfileOptions'
+import type { UpdateServiceMetaField } from './types/editor'
 
 type CitizenProfileHeaderProps = {
     citizen: Citizen
     hasUnsavedChanges: boolean
+    isSaving: boolean
     saveMessage: string | null
+    saveError: string | null
     onReset: () => void
-    onSave: () => void
+    onSave: () => Promise<void>
     updateServiceMeta: UpdateServiceMetaField
 }
 
 export const CitizenProfileHeader = ({
     citizen,
     hasUnsavedChanges,
+    isSaving,
     saveMessage,
+    saveError,
     onReset,
     onSave,
     updateServiceMeta,
@@ -56,16 +60,16 @@ export const CitizenProfileHeader = ({
             </Stack>
 
             <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                <Button variant="outlined" onClick={onReset} disabled={!hasUnsavedChanges}>
+                <Button variant="outlined" onClick={onReset} disabled={!hasUnsavedChanges || isSaving}>
                     Отменить
                 </Button>
                 <Button
                     variant="contained"
                     startIcon={<SaveOutlinedIcon />}
                     onClick={onSave}
-                    disabled={!hasUnsavedChanges}
+                    disabled={!hasUnsavedChanges || isSaving}
                 >
-                    Сохранить
+                    {isSaving ? 'Сохранение...' : 'Сохранить'}
                 </Button>
             </Stack>
         </Stack>
@@ -75,11 +79,7 @@ export const CitizenProfileHeader = ({
                 <FormTextField label="ID записи" value={citizen.id} disabled />
             </Grid>
             <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-                <FormTextField
-                    label="Обновлено"
-                    value={formatDate(citizen.lastUpdatedAt)}
-                    disabled
-                />
+                <FormTextField label="Обновлено" value={formatDate(citizen.lastUpdatedAt)} disabled />
             </Grid>
             <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
                 <FormTextField
@@ -98,6 +98,7 @@ export const CitizenProfileHeader = ({
         </Grid>
 
         {saveMessage ? <Alert severity="success">{saveMessage}</Alert> : null}
+        {saveError ? <Alert severity="error">{saveError}</Alert> : null}
         {hasUnsavedChanges ? <Alert severity="info">Есть несохранённые изменения.</Alert> : null}
     </Stack>
 )

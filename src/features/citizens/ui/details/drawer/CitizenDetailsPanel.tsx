@@ -1,4 +1,4 @@
-import { Card, CardContent, Stack, Typography } from '@mui/material'
+import { Alert, Button, Card, CardContent, Stack, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 
 import type { Citizen } from '@shared/types'
@@ -15,15 +15,19 @@ const DetailsCard = styled(Card)({
 type CitizenDetailsPanelProps = {
     citizen: Citizen | null
     selectedCitizenId: string | null
+    isOutsideCurrentList: boolean
     isLoading: boolean
     error: string | null
+    onResetFilters: () => void
 }
 
 export const CitizenDetailsPanel = ({
     citizen,
     selectedCitizenId,
+    isOutsideCurrentList,
     isLoading,
     error,
+    onResetFilters,
 }: CitizenDetailsPanelProps) => (
     <DetailsCard variant="outlined">
         <CardContent sx={{ p: 0 }}>
@@ -36,6 +40,20 @@ export const CitizenDetailsPanel = ({
                 </Stack>
 
                 {error ? <CitizensSectionState kind="message" severity="error" message={error} /> : null}
+
+                {!isLoading && !error && selectedCitizenId && citizen && isOutsideCurrentList ? (
+                    <Alert
+                        severity="info"
+                        action={
+                            <Button color="inherit" size="small" onClick={onResetFilters}>
+                                Сбросить фильтры
+                            </Button>
+                        }
+                    >
+                        Карточка сохранена, но запись больше не отображается в текущем списке. Она могла выпасть из
+                        выборки из-за активных фильтров или изменившейся сортировки.
+                    </Alert>
+                ) : null}
 
                 {isLoading ? (
                     <CitizensSectionState kind="loading" message="Загрузка данных гражданина..." />

@@ -17,9 +17,9 @@ const LayoutMain = styled(Box)({
 })
 
 const LayoutContent = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(3, 2),
+    padding: theme.spacing(2, 2),
     [theme.breakpoints.up('md')]: {
-        padding: theme.spacing(4, 4),
+        padding: theme.spacing(2.5, 4),
     },
 }))
 

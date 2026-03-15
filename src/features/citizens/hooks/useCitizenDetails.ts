@@ -1,28 +1,15 @@
 import { useEffect, useState } from 'react'
 
-import { getCitizenDetails } from '@shared/api'
+import { getCitizenDetails, subscribeToFakeApiStore } from '@shared/api'
 import type { Citizen } from '@shared/types'
 
-type UseCitizenDetailsParams = {
-    availableCitizenIds: string[]
-}
-
-export const useCitizenDetails = ({ availableCitizenIds }: UseCitizenDetailsParams) => {
+export const useCitizenDetails = () => {
     const [selectedCitizenId, setSelectedCitizenId] = useState<string | null>(null)
     const [selectedCitizen, setSelectedCitizen] = useState<Citizen | null>(null)
     const [isDetailsOpen, setIsDetailsOpen] = useState(false)
     const [isDetailsLoading, setIsDetailsLoading] = useState(false)
     const [detailsError, setDetailsError] = useState<string | null>(null)
-
-    useEffect(() => {
-        if (!selectedCitizenId) return
-
-        if (availableCitizenIds.includes(selectedCitizenId)) return
-
-        setSelectedCitizenId(null)
-        setSelectedCitizen(null)
-        setIsDetailsOpen(false)
-    }, [availableCitizenIds, selectedCitizenId])
+    const [storeRevision, setStoreRevision] = useState(0)
 
     useEffect(() => {
         if (!selectedCitizenId) {
@@ -47,7 +34,9 @@ export const useCitizenDetails = ({ availableCitizenIds }: UseCitizenDetailsPara
             } catch (error) {
                 if (!isActive) return
 
-                setDetailsError(error instanceof Error ? error.message : 'Не удалось загрузить данные гражданина.')
+                setDetailsError(
+                    error instanceof Error ? error.message : 'Не удалось загрузить данные гражданина.',
+                )
                 setSelectedCitizen(null)
             } finally {
                 if (isActive) setIsDetailsLoading(false)
@@ -59,7 +48,13 @@ export const useCitizenDetails = ({ availableCitizenIds }: UseCitizenDetailsPara
         return () => {
             isActive = false
         }
-    }, [selectedCitizenId])
+    }, [selectedCitizenId, storeRevision])
+
+    useEffect(() => {
+        return subscribeToFakeApiStore(() => {
+            setStoreRevision((currentValue) => currentValue + 1)
+        })
+    }, [])
 
     const handleSelectCitizen = (id: string) => {
         setSelectedCitizenId(id)
